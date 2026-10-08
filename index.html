@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jannish — B.Tech CSBS Student & Space-tech Developer | Portfolio</title>
+    <meta name="description" content="Portfolio of Jannish, a 2nd-year B.Tech Computer Science and Business Systems (CSBS) student at Dhaanish Ahmed College of Engineering, Padappai, Chennai, building satellite telemetry tools and 3D web experiences." />
+    <meta name="theme-color" content="#03040b" />
+    <meta property="og:title" content="Jannish — B.Tech CSBS Student & Space-tech Developer" />
+    <meta property="og:description" content="2nd-year CSBS student from Chennai building real-time satellite telemetry and immersive 3D web experiences." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="is-loading">
+    <!-- ░░ Loader ░░ -->
+    <div class="loader" id="loader" aria-hidden="true">
+      <div class="loader__inner">
+        <span class="loader__label mono">Launch sequence</span>
+        <div class="loader__count" id="loader-count">T-10</div>
+        <div class="loader__bar"><span id="loader-bar"></span></div>
+        <span class="loader__status mono" id="loader-status">Initialising guidance systems…</span>
+      </div>
+    </div>
+
+    <!-- ░░ WebGL + HUD layers ░░ -->
+    <canvas id="webgl" aria-hidden="true"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="sat-label mono" id="sat-label" aria-hidden="true">
+      <span class="sat-label__dot"></span>
+      <div class="sat-label__body">
+        <strong id="sat-name">CARTOSAT-3</strong>
+        <span id="sat-data">LAT 0.00° · LON 0.00°</span>
+      </div>
+    </div>
+
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+    <div class="cursor-ring" id="cursor-ring" aria-hidden="true"></div>
+    <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+
+    <!-- ░░ Navigation ░░ -->
+    <header class="nav" id="nav">
+      <a href="#hero" class="nav__logo" id="nav-logo" aria-label="Back to top">
+        <span class="nav__logo-mark">J</span><span class="nav__logo-text">annish<span class="accent">.</span></span>
+      </a>
+      <nav aria-label="Primary">
+        <ul class="nav__links" id="nav-links">
+          <li><a href="#about" data-nav id="nav-about"><span class="mono">01</span>About</a></li>
+          <li><a href="#skills" data-nav id="nav-skills"><span class="mono">02</span>Arsenal</a></li>
+          <li><a href="#projects" data-nav id="nav-projects"><span class="mono">03</span>Missions</a></li>
+          <li><a href="#experience" data-nav id="nav-experience"><span class="mono">04</span>Journey</a></li>
+          <li><a href="#contact" data-nav id="nav-contact"><span class="mono">05</span>Comms</a></li>
+        </ul>
+      </nav>
+      <a href="#contact" class="btn btn--ghost btn--sm nav__cta magnetic" id="nav-cta">Let's talk</a>
+      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false"><span></span><span></span></button>
+    </header>
+
+    <main id="main">
+      <!-- ░░ Hero ░░ -->
+      <section class="hero" id="hero" data-scene="hero">
+        <div class="container hero__inner">
+          <div class="hero__content">
+            <p class="eyebrow hero__eyebrow" data-intro><span class="pulse-dot"></span>B.Tech CSBS · 2nd Year · Open to internships</p>
+            <h1 class="hero__title">
+              <span class="line"><span data-intro-line>Hi, I'm Jannish.</span></span>
+              <span class="line"><span data-intro-line>I'm learning to build</span></span>
+              <span class="line"><span data-intro-line>for <em class="gradient-text">space &amp; beyond.</em></span></span>
+            </h1>
+            <p class="hero__lead" data-intro>
+              A 2nd-year Computer Science &amp; Business Systems student at Dhaanish Ahmed College of Engineering,
+              Chennai — turning orbital mechanics, real-time telemetry and code into interactive experiences.
+            </p>
+            <div class="hero__actions" data-intro>
+              <a href="#projects" class="btn btn--primary magnetic" id="hero-cta-projects">
+                <span>View missions</span>
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </a>
+              <a href="#contact" class="btn btn--ghost magnetic" id="hero-cta-contact">Open comms</a>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hud hud--hero mono" data-intro aria-label="Live telemetry">
+          <div class="hud__row"><span>Target</span><b id="hud-name">CARTOSAT-3</b></div>
+          <div class="hud__row"><span>Lat</span><b id="hud-lat">--</b></div>
+          <div class="hud__row"><span>Lon</span><b id="hud-lon">--</b></div>
+          <div class="hud__row"><span>Alt</span><b id="hud-alt">--</b></div>
+          <div class="hud__row"><span>Vel</span><b id="hud-vel">--</b></div>
+          <div class="hud__foot"><span class="pulse-dot pulse-dot--saffron"></span>SGP4 · live propagation</div>
+        </aside>
+
+        <div class="hero__hint mono" data-intro>
+          <span class="hero__mouse"><span></span></span>
+          Scroll to explore · drag to spin the planet
+        </div>
+      </section>
+
+      <!-- ░░ About ░░ -->
+      <section class="section about" id="about" data-scene="about">
+        <div class="container about__grid">
+          <div class="about__text">
+            <p class="eyebrow" data-reveal><span class="mono">01</span> Mission profile</p>
+            <h2 class="section__title" data-reveal>A student who keeps an eye on <span class="gradient-text">the sky.</span></h2>
+            <p data-reveal>
+              I'm Jannish, a 2nd-year B.Tech student in Computer Science and Business Systems (CSBS) from
+              Padappai, Chennai. I'm fascinated by the point where software meets space — so I build tools that
+              pull live orbital data, propagate satellite positions with SGP4, and turn that math into something
+              anyone can see.
+            </p>
+            <p data-reveal>
+              CSBS lets me combine core computer science with business and management thinking. Outside class I
+              experiment with full-stack web apps and 3D WebGL interfaces, and I'm looking for internships,
+              hackathons and projects where I can learn by building.
+            </p>
+            <ul class="info-list" data-reveal>
+              <li><span class="info-list__icon" aria-hidden="true">🎓</span><div><b>B.Tech — Computer Science &amp; Business Systems (CSBS)</b><small>2nd Year (Ongoing) · Dept of CSBS</small></div></li>
+              <li><span class="info-list__icon" aria-hidden="true">🏛️</span><div><b>Dhaanish Ahmed College of Engineering (DACE)</b><small>Padappai, Chennai, Tamil Nadu</small></div></li>
+              <li><span class="info-list__icon" aria-hidden="true">📍</span><div><b>Chennai, Tamil Nadu, India</b><small>Seeking internships &amp; collaborative space-tech projects</small></div></li>
+            </ul>
+            <div class="stats" data-reveal>
+              <div class="stat"><b data-count="2">0</b><span>nd</span><p>Year B.Tech CSBS</p></div>
+              <div class="stat"><b data-count="4">0</b><span>+</span><p>Personal projects</p></div>
+              <div class="stat"><b data-count="7.6" data-decimals="1">0</b><span>km/s</span><p>Fastest thing I track</p></div>
+            </div>
+          </div>
+
+          <div class="terminal glass tilt" data-reveal id="terminal">
+            <div class="terminal__bar">
+              <span class="dot dot--r"></span><span class="dot dot--y"></span><span class="dot dot--g"></span>
+              <span class="terminal__title mono">isro-telemetry-engine — node tracker.js</span>
+            </div>
+            <pre class="terminal__body mono" id="terminal-body"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ░░ Skills ░░ -->
+      <section class="section skills" id="skills" data-scene="skills">
+        <div class="container">
+          <div class="section__head">
+            <p class="eyebrow" data-reveal><span class="mono">02</span> Arsenal</p>
+            <h2 class="section__title" data-reveal>Tools I'm launching with.</h2>
+            <p class="section__lead" data-reveal>What I'm learning in CSBS and using in my own projects — from CS fundamentals to real-time data and 3D graphics.</p>
+          </div>
+
+          <div class="skills__grid">
+            <article class="skill-card glass tilt" data-reveal id="skill-space">
+              <div class="skill-card__icon" style="--c: var(--saffron)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-30 12 12)"/></svg>
+              </div>
+              <h3>Space &amp; Science</h3>
+              <p>Orbital mechanics, TLE/SGP4 propagation and coordinate-frame transforms.</p>
+              <ul class="pills"><li>SGP4</li><li>satellite.js</li><li>ECI → Geodetic</li><li>CelesTrak</li></ul>
+            </article>
+            <article class="skill-card glass tilt" data-reveal id="skill-3d">
+              <div class="skill-card__icon" style="--c: var(--cyan)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l9 5v10l-9 5-9-5V7z"/><path d="M12 22V12M21 7l-9 5-9-5"/></svg>
+              </div>
+              <h3>3D &amp; Front-end</h3>
+              <p>Immersive interfaces with custom shaders, smooth motion and pixel-perfect UI.</p>
+              <ul class="pills"><li>Three.js</li><li>GLSL</li><li>React</li><li>GSAP</li></ul>
+            </article>
+            <article class="skill-card glass tilt" data-reveal id="skill-backend">
+              <div class="skill-card__icon" style="--c: var(--violet)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></svg>
+              </div>
+              <h3>Back-end &amp; Data</h3>
+              <p>APIs, databases and data handling — plus the business side of systems from CSBS.</p>
+              <ul class="pills"><li>Node.js</li><li>Express</li><li>SQL / DBMS</li><li>Data Analytics</li></ul>
+            </article>
+            <article class="skill-card glass tilt" data-reveal id="skill-lang">
+              <div class="skill-card__icon" style="--c: var(--teal)">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6l-6 6 6 6M16 6l6 6-6 6"/></svg>
+              </div>
+              <h3>Languages &amp; CS Core</h3>
+              <p>Languages and fundamentals from my coursework and personal projects.</p>
+              <ul class="pills"><li>C</li><li>Python</li><li>Java</li><li>JavaScript</li><li>DSA</li><li>OOP</li></ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="marquee" aria-hidden="true">
+          <div class="marquee__track mono">
+            <span>Three.js</span><span>✦</span><span>WebGL</span><span>✦</span><span>Node.js</span><span>✦</span><span>SGP4</span><span>✦</span><span>TypeScript</span><span>✦</span><span>Python</span><span>✦</span><span>GLSL</span><span>✦</span><span>PostgreSQL</span><span>✦</span><span>GSAP</span><span>✦</span><span>Vite</span><span>✦</span>
+            <span>Three.js</span><span>✦</span><span>WebGL</span><span>✦</span><span>Node.js</span><span>✦</span><span>SGP4</span><span>✦</span><span>TypeScript</span><span>✦</span><span>Python</span><span>✦</span><span>GLSL</span><span>✦</span><span>PostgreSQL</span><span>✦</span><span>GSAP</span><span>✦</span><span>Vite</span><span>✦</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ░░ Projects ░░ -->
+      <section class="section projects" id="projects" data-scene="projects">
+        <div class="container">
+          <div class="section__head">
+            <p class="eyebrow" data-reveal><span class="mono">03</span> Missions</p>
+            <h2 class="section__title" data-reveal>Selected work.</h2>
+            <p class="section__lead" data-reveal>From live satellite tracking to orbital visualisation — projects where engineering meets the cosmos.</p>
+          </div>
+
+          <div class="projects__grid">
+            <article class="project project--featured glass tilt" data-reveal id="project-telemetry">
+              <div class="project__media">
+                <img src="/images/telemetry.jpg" alt="Mission-control dashboard showing a satellite orbit around Earth" loading="lazy" />
+                <span class="project__badge mono"><span class="pulse-dot pulse-dot--saffron"></span>Live</span>
+              </div>
+              <div class="project__body">
+                <p class="project__meta mono">Featured · 2026</p>
+                <h3>ISRO Telemetry Engine</h3>
+                <p>
+                  Real-time tracker for ISRO's Cartosat-3. Fetches live TLEs from CelesTrak, propagates the orbit with
+                  SGP4, and converts ECI coordinates to latitude, longitude and altitude using Greenwich Mean Sidereal Time.
+                </p>
+                <ul class="pills"><li>Node.js</li><li>satellite.js</li><li>SGP4</li><li>CelesTrak API</li></ul>
+                <a href="#contact" class="project__link" id="project-telemetry-link">Request a demo <span aria-hidden="true">→</span></a>
+              </div>
+            </article>
+
+            <article class="project glass tilt" data-reveal id="project-orbits">
+              <div class="project__media project__media--art art-orbits" aria-hidden="true">
+                <span class="art-orbits__planet"></span>
+                <span class="art-orbits__ring r1"><i></i></span>
+                <span class="art-orbits__ring r2"><i></i></span>
+                <span class="art-orbits__ring r3"><i></i></span>
+              </div>
+              <div class="project__body">
+                <p class="project__meta mono">WebGL · 2025</p>
+                <h3>Orbit Visualizer 3D</h3>
+                <p>An interactive globe rendering whole satellite constellations in real time with GPU-driven orbit trails.</p>
+                <ul class="pills"><li>Three.js</li><li>GLSL</li><li>Web Workers</li></ul>
+              </div>
+            </article>
+
+            <article class="project glass tilt" data-reveal id="project-launch">
+              <div class="project__media project__media--art art-launch" aria-hidden="true">
+                <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice">
+                  <defs>
+                    <linearGradient id="arc" x1="0" x2="1"><stop offset="0" stop-color="#ff9a3c"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient>
+                  </defs>
+                  <g class="art-launch__grid">
+                    <path d="M0 55H400M0 110H400M0 165H400M80 0V220M160 0V220M240 0V220M320 0V220"/>
+                  </g>
+                  <path class="art-launch__arc" d="M30 200 C 120 190, 220 120, 380 30" />
+                  <circle class="art-launch__rocket" r="5">
+                    <animateMotion dur="4s" repeatCount="indefinite" keyPoints="0;1;1" keyTimes="0;0.7;1" calcMode="spline" keySplines="0.22 1 0.36 1;0 0 1 1" path="M30 200 C 120 190, 220 120, 380 30" />
+                  </circle>
+                  <circle cx="30" cy="200" r="4" fill="#ff9a3c"/>
+                </svg>
+              </div>
+              <div class="project__body">
+                <p class="project__meta mono">Python · 2025</p>
+                <h3>Launch Window Planner</h3>
+                <p>Computes optimal launch windows and ascent trajectories, visualised as interactive mission timelines.</p>
+                <ul class="pills"><li>Python</li><li>NumPy</li><li>D3.js</li></ul>
+              </div>
+            </article>
+
+            <article class="project glass tilt" data-reveal id="project-ground">
+              <div class="project__media">
+                <img src="/images/groundstation.jpg" alt="Satellite ground station dish under the Milky Way" loading="lazy" />
+              </div>
+              <div class="project__body">
+                <p class="project__meta mono">Full-stack · 2024</p>
+                <h3>Ground Station Dashboard</h3>
+                <p>Streams pass predictions and signal health over WebSockets into a responsive operator dashboard.</p>
+                <ul class="pills"><li>TypeScript</li><li>WebSockets</li><li>PostgreSQL</li></ul>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ░░ Journey / Education ░░ -->
+      <section class="section experience" id="experience" data-scene="experience">
+        <div class="container">
+          <div class="section__head">
+            <p class="eyebrow" data-reveal><span class="mono">04</span> Academic &amp; Tech Journey</p>
+            <h2 class="section__title" data-reveal>The learning trajectory.</h2>
+            <p class="section__lead" data-reveal>How I'm growing as a student engineer — balancing academic rigor in CSBS with self-driven space-tech exploration.</p>
+          </div>
+          <ol class="timeline">
+            <li class="timeline__item" data-reveal>
+              <span class="timeline__date mono">Present · 2nd Year B.Tech Ongoing</span>
+              <div class="timeline__card glass">
+                <h3>B.Tech CSBS @ Dhaanish Ahmed College of Engineering</h3>
+                <p>Studying Computer Science and Business Systems at Padappai, Chennai. Building real-time telemetry pipelines like the ISRO Cartosat-3 SGP4 propagation engine, and creating interactive 3D WebGL experiences.</p>
+              </div>
+            </li>
+            <li class="timeline__item" data-reveal>
+              <span class="timeline__date mono">1st Year Foundation</span>
+              <div class="timeline__card glass">
+                <h3>Engineering Fundamentals &amp; Core Programming</h3>
+                <p>Mastered C programming, object-oriented principles, algorithms, and computational thinking. Started building interactive web interfaces with JavaScript and Three.js.</p>
+              </div>
+            </li>
+            <li class="timeline__item" data-reveal>
+              <span class="timeline__date mono">Spark</span>
+              <div class="timeline__card glass">
+                <h3>Ignition into Space Technology</h3>
+                <p>Inspired by India's space program and ISRO missions, started studying orbital mechanics, satellite telemetry frames, Two-Line Element sets (TLE), and astronomical visualization.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ░░ Contact ░░ -->
+      <section class="section contact" id="contact" data-scene="contact">
+        <div class="container contact__inner">
+          <p class="eyebrow" data-reveal><span class="mono">05</span> Comms channel</p>
+          <h2 class="contact__title" data-reveal>Let's connect &amp; build something <span class="gradient-text">out of this world.</span></h2>
+          <p class="section__lead" data-reveal>Looking for internships, hackathons, open-source space projects, or curious to collaborate? Send a transmission from Chennai or anywhere across the globe.</p>
+
+          <form class="contact__form glass" id="contact-form" data-reveal novalidate>
+            <div class="field">
+              <input type="text" id="contact-name" name="name" placeholder=" " required autocomplete="name" />
+              <label for="contact-name">Your name</label>
+            </div>
+            <div class="field">
+              <input type="email" id="contact-email" name="email" placeholder=" " required autocomplete="email" />
+              <label for="contact-email">Email address</label>
+            </div>
+            <div class="field field--full">
+              <textarea id="contact-message" name="message" rows="4" placeholder=" " required></textarea>
+              <label for="contact-message">Your message</label>
+            </div>
+            <button type="submit" class="btn btn--primary magnetic field--full" id="contact-submit">
+              <span>Transmit message</span>
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+            </button>
+          </form>
+
+          <div class="socials" data-reveal>
+            <a href="https://github.com/" target="_blank" rel="noopener" class="magnetic" id="social-github" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 00-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 015.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.4-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0012 .5z" fill="currentColor"/></svg>
+            </a>
+            <a href="https://linkedin.com/" target="_blank" rel="noopener" class="magnetic" id="social-linkedin" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.12 2.06 2.06 0 010 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" fill="currentColor"/></svg>
+            </a>
+            <a href="https://x.com/" target="_blank" rel="noopener" class="magnetic" id="social-x" aria-label="X (Twitter)">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.24 2.25h3.31l-7.23 8.26 8.5 11.24h-6.66l-5.21-6.82-5.97 6.82H1.67l7.73-8.84L1.25 2.25h6.83l4.71 6.23zm-1.16 17.52h1.83L7.08 4.13H5.12z" fill="currentColor"/></svg>
+            </a>
+            <a href="mailto:hello@jannish.dev" class="magnetic" id="social-email" aria-label="Email">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2V6a2 2 0 012-2zm0 2v.01L12 12l8-5.99V6H4zm16 12V8.5l-8 6-8-6V18h16z" fill="currentColor"/></svg>
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container footer__inner mono">
+        <span>© <span id="year"></span> Jannish · Crafted with Three.js</span>
+        <span>Mission clock (IST) <b id="clock">--:--:--</b></span>
+        <a href="#hero" id="back-to-top">Back to orbit ↑</a>
+      </div>
+    </footer>
+
+    <div class="toast mono" id="toast" role="status" aria-live="polite"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
